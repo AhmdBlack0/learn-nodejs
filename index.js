@@ -1,4 +1,4 @@
-// express web server
+// express create web server
 import express from "express";
 import mongoose from "mongoose";
 
@@ -65,6 +65,15 @@ app.get("/api/products/:id", async (req, res) => {
       return res.status(400).json({ data: "product not exists" });
     }
     return res.status(200).json({ data: product });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete("/api/products/:id", async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    return res.status(200).json({ data: "delete" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
