@@ -1,84 +1,26 @@
-// express create web server
 import express from "express";
-import mongoose from "mongoose";
+import connectDB from "./db/connectDB.js";
+import productRoutes from "./routes/products.route.js";
 
 const app = express();
-
 app.use(express.json());
-const connectDB = async () => {
+const PORT = 5000;
+
+// routes
+app.use("/api/", productRoutes);
+
+const startServer = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://ahmdblack0_db_user:vTPz3g8DlKuDSU4D@cluster0.bdqztbp.mongodb.net/?appName=Cluster0"
-    );
-    console.log("connect DB");
+    await connectDB();
+    console.log("✅ MongoDB connected");
+
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Failed to connect to MongoDB:", error.message);
+    process.exit(1);
   }
 };
 
-const productSchema = mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  productImage: {
-    type: String,
-    default: "",
-  },
-});
-const Product = mongoose.model("Product", productSchema);
-
-connectDB();
-
-app.post("/api/products/", async (req, res) => {
-  try {
-    const { title, description, price, productImage } = req.body;
-    const newProduct = new Product({ title, description, price, productImage });
-    await newProduct.save();
-    return res.status(201).json({ data: newProduct });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
-app.get("/api/products/", async (req, res) => {
-  try {
-    const products = await Product.find().select("-__v");
-    return res.status(200).json({ data: products });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
-app.get("/api/products/:id", async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id).select("-__v");
-    if (!product) {
-      return res.status(400).json({ data: "product not exists" });
-    }
-    return res.status(200).json({ data: product });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
-app.delete("/api/products/:id", async (req, res) => {
-  try {
-    await Product.findByIdAndDelete(req.params.id);
-    return res.status(200).json({ data: "delete" });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
-app.listen(3000, () => {
-  console.log("running 3000");
-}); // development
+startServer();
