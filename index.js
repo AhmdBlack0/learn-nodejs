@@ -1,13 +1,15 @@
 import express from "express";
 import connectDB from "./db/connectDB.js";
 import productRoutes from "./routes/products.route.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 app.use(express.json());
 const PORT = 5000;
 
 // routes
-app.use("/api/", productRoutes);
+app.use("/api/products/", productRoutes);
+app.use("/api/auth/", authRoutes);
 
 const startServer = async () => {
   try {

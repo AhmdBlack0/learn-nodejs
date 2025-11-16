@@ -4,13 +4,15 @@ import {
   getProduct,
   getProducts,
   deleteProduct,
+  updateProduct,
 } from "../controllers/products.controllers.js";
 
 const router = express.Router();
 
-router.post("/products/", addProduct);
-router.get("/products/", getProducts);
-router.get("/products/:id", getProduct);
-router.delete("/products/:id", deleteProduct);
+router.post("/", addProduct);
+router.get("/", getProducts);
+router.get("/:id", getProduct);
+router.delete("/:id", deleteProduct);
+router.patch("/:id", updateProduct);
 
 export default router;

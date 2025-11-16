@@ -40,3 +40,24 @@ export const deleteProduct = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+// patch => one
+// put => all
+export const updateProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(id);
+    const { title, description, price, productImage } = req.body;
+
+    const updates = {};
+    if (title) updates.title = title;
+    if (description) updates.description = description;
+    if (price) updates.price = price;
+    if (productImage) updates.productImage = productImage;
+
+    await Product.findByIdAndUpdate(id, updates);
+    res.status(200).json({ data: "updated" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
