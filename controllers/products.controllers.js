@@ -1,7 +1,15 @@
 import Product from "../models/products.model.js";
+import jwt from "jsonwebtoken";
 
 export const addProduct = async (req, res) => {
   try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+    // req.user = decoded.role;
+    console.log(decoded.role);
+    if (decoded.role !== "admin") {
+      return res.status(400).json({ data: "access admin only" });
+    }
     const { title, description, price, productImage } = req.body;
     const newProduct = new Product({ title, description, price, productImage });
     await newProduct.save();
@@ -34,6 +42,13 @@ export const getProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+    // req.user = decoded.role;
+    console.log(decoded.role);
+    if (decoded.role !== "admin") {
+      return res.status(400).json({ data: "access admin only" });
+    }
     await Product.findByIdAndDelete(req.params.id);
     return res.status(200).json({ data: "delete" });
   } catch (error) {
@@ -45,6 +60,13 @@ export const deleteProduct = async (req, res) => {
 // put => all
 export const updateProduct = async (req, res) => {
   try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+    // req.user = decoded.role;
+    console.log(decoded.role);
+    if (decoded.role !== "admin") {
+      return res.status(400).json({ data: "access admin only" });
+    }
     const id = req.params.id;
     console.log(id);
     const { title, description, price, productImage } = req.body;

@@ -4,12 +4,12 @@ const userSchema = mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,
+      required: [true, "username is required"],
     },
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: [true, "Email is exists"],
     },
     password: {
       type: String,
@@ -17,6 +17,11 @@ const userSchema = mongoose.Schema(
     },
     token: {
       type: String,
+    },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user",
     },
   },
   {

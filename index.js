@@ -3,6 +3,9 @@ import connectDB from "./db/connectDB.js";
 import productRoutes from "./routes/products.route.js";
 import authRoutes from "./routes/auth.routes.js";
 
+// update user
+// delete user
+
 const app = express();
 app.use(express.json());
 const PORT = 5000;
